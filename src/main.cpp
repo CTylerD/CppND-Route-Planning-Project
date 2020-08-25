@@ -1,9 +1,12 @@
 #include <optional>
 #include <fstream>
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
-#include <io2d.h>
+#include <cfloat>
+#include <sstream>
+#include "io2d.h"
 #include "route_model.h"
 #include "render.h"
 #include "route_planner.h"
@@ -27,8 +30,23 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
-int main(int argc, const char **argv)
-{    
+std::vector<float> UserInputToCoordinates(std::string& input) {
+    std::vector<float> coordinates;
+    std::istringstream InputStream(input);
+    std::string temp;
+
+
+    while(std::getline(InputStream, temp, ',')) {
+        //std::cout << temp << "\n";
+        coordinates.push_back(stof(temp));
+    }
+    for (float i : coordinates) {
+        std::cout << i << "\n";
+    }
+    return coordinates;
+}
+
+int main(int argc, const char **argv) {
     std::string osm_data_file = "";
     if( argc > 1 ) {
         for( int i = 1; i < argc; ++i )
@@ -52,15 +70,36 @@ int main(int argc, const char **argv)
             osm_data = std::move(*data);
     }
     
-    // TODO 1: Declare floats `start_x`, `start_y`, `end_x`, and `end_y` and get
-    // user input for these values using std::cin. Pass the user input to the
-    // RoutePlanner object below in place of 10, 10, 90, 90.
+    float start_x;
+    float start_y;
+    float end_x;
+    float end_y;
+    std::vector<float> starting_coors;
+    std::vector<float> ending_coors;
+    std::string input_start;
+    std::string input_end;
 
-    // Build Model.
+    // std::cout << "Enter the starting location coordinates (ex. 10, 10): " << "\n";
+    // std::getline(std::cin, input_start);
+
+    // starting_coors = UserInputToCoordinates(input_start);
+    starting_coors = {10, 10};
+    start_x = starting_coors[0];
+    start_y = starting_coors[1];
+
+    // std::cout << "Enter the destination location coordinates (ex. 90, 90): " << "\n";
+    // std::getline(std::cin, input_end);
+
+    // ending_coors = UserInputToCoordinates(input_end);
+    ending_coors = {90, 90};
+    end_x = ending_coors[0];
+    end_y = ending_coors[1];
+
+    //Build Model.
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
-    RoutePlanner route_planner{model, 10, 10, 90, 90};
+    RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
     route_planner.AStarSearch();
 
     std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
