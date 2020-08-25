@@ -22,20 +22,19 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
 float RoutePlanner::CalculateHValue(RouteModel::Node const *node) {
     float distance;
     distance = node->distance(*end_node);
-    std::cout << distance << "\n";
     return distance;
 }
 
 void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
     current_node->FindNeighbors();
-    RouteModel::Node curr_node_ref = *current_node;
-    for (RouteModel::Node *n : curr_node_ref.neighbors) {
-        RouteModel::Node node = *n;
-        node.parent = current_node;
-        node.g_value += 1;
-        node.h_value = CalculateHValue(&node);
-        open_list.push_back(&node);
-        node.visited = true;
+    for (RouteModel::Node *n : current_node->neighbors) {
+        n->parent = current_node;
+        n->g_value += current_node->distance(*n);
+        n->h_value = CalculateHValue(n);
+        open_list.emplace_back(n);
+        n->visited = true;
+        std::cout << "the next neighbor g-value is: " << n->g_value << "\n";
+        std::cout << "the next neighbor h-value is: " << n->h_value << "\n";
     }
 
 }
@@ -83,8 +82,6 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
         path_found.insert(path_found.begin(), *current_node);
     }
 
-    // TODO: Implement your solution here.
-
     distance *= m_Model.MetricScale(); // Multiply the distance by the scale of the map to get meters.
     return path_found;
 
@@ -101,6 +98,10 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
-    // TODO: Implement your solution here.
+    while (current_node != end_node) {
+        AddNeighbors(current_node);
+        RouteModel::Node *next_node = NextNode();
+    }
+    m_Model.path = ConstructFinalPath(current_node);
 
 }

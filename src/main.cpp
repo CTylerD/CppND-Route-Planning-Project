@@ -102,7 +102,7 @@ int main(int argc, const char **argv) {
     RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
     route_planner.AStarSearch();
 
-    std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
+    //std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
 
     // Render results of search.
     Render render{model};
