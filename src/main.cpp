@@ -14,14 +14,14 @@
 using namespace std::experimental;
 
 static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
-{   
+{
     std::ifstream is{path, std::ios::binary | std::ios::ate};
     if( !is )
         return std::nullopt;
-    
+
     auto size = is.tellg();
-    std::vector<std::byte> contents(size);    
-    
+    std::vector<std::byte> contents(size);
+
     is.seekg(0);
     is.read((char*)contents.data(), size);
 
@@ -30,21 +30,60 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
-std::vector<float> UserInputToCoordinates(std::string& input) {
+std::vector<float> UserInputToCoordinates(std::string input) {
     std::vector<float> coordinates;
     std::istringstream InputStream(input);
     std::string temp;
 
 
     while(std::getline(InputStream, temp, ',')) {
-        //std::cout << temp << "\n";
         coordinates.push_back(stof(temp));
-    }
-    for (float i : coordinates) {
-        std::cout << i << "\n";
     }
     return coordinates;
 }
+
+std::vector<float> GetUserCoordinates() {
+    float start_x;
+    float start_y;
+    float end_x;
+    float end_y;
+    bool valid_start = false;
+    bool valid_end = false;
+    while (valid_start == false) {
+        std::cout << "Please enter your starting location's coordinates (ex. 10, 10): " << "\n";
+        std::string user_start_input;
+        std::getline(std::cin, user_start_input);
+        std::vector<float> input_start = UserInputToCoordinates(user_start_input);
+        start_x = input_start[0];
+        start_y = input_start[1];
+
+        if (typeid(start_x) == typeid(float) && start_x >= 0 && start_x <= 100 && typeid(start_y) == typeid(float) && start_y >= 0 && start_y <= 100) {
+            valid_start = true;
+        } else {
+            std::cout << "Your starting coordinate values must be integers from 0 to 100." << "\n";
+        }
+    }
+
+    while (valid_end == false) {
+        std::cout << "Please enter your ending location's coordinates (ex. 10, 10): " << "\n";
+        std::string user_end_input;
+        std::getline(std::cin, user_end_input);
+        std::vector<float> input_end = UserInputToCoordinates(user_end_input);
+        end_x = input_end[0];
+        
+        end_y = input_end[1];
+
+        if (typeid(end_x) == typeid(float) && end_x >= 0 && end_x <= 100 && typeid(end_y) == typeid(float) && end_y >= 0 && end_y <= 100) {
+            valid_end = true;
+        } else {
+            std::cout << "Your ending coordinate values must be integers from 0 to 100." << "\n";;
+        }
+    }
+    return {start_x, start_y, end_x, end_y};
+}
+
+
+
 
 int main(int argc, const char **argv) {
     std::string osm_data_file = "";
@@ -58,9 +97,9 @@ int main(int argc, const char **argv) {
         std::cout << "Usage: [executable] [-f filename.osm]" << std::endl;
         osm_data_file = "../map.osm";
     }
-    
+
     std::vector<std::byte> osm_data;
- 
+
     if( osm_data.empty() && !osm_data_file.empty() ) {
         std::cout << "Reading OpenStreetMap data from the following file: " <<  osm_data_file << std::endl;
         auto data = ReadFile(osm_data_file);
@@ -69,31 +108,19 @@ int main(int argc, const char **argv) {
         else
             osm_data = std::move(*data);
     }
-    
-    float start_x;
-    float start_y;
-    float end_x;
-    float end_y;
-    std::vector<float> starting_coors;
-    std::vector<float> ending_coors;
-    std::string input_start;
-    std::string input_end;
 
-    // std::cout << "Enter the starting location coordinates (ex. 10, 10): " << "\n";
-    // std::getline(std::cin, input_start);
+    std::vector<float> user_coors;
 
-    // starting_coors = UserInputToCoordinates(input_start);
-    starting_coors = {10, 10};
-    start_x = starting_coors[0];
-    start_y = starting_coors[1];
+    // uncomment these for faster iteration during development
+    // ending_coors = {90, 90};
+    // starting_coors = {10, 10};
 
-    // std::cout << "Enter the destination location coordinates (ex. 90, 90): " << "\n";
-    // std::getline(std::cin, input_end);
+    user_coors = GetUserCoordinates();
 
-    // ending_coors = UserInputToCoordinates(input_end);
-    ending_coors = {90, 90};
-    end_x = ending_coors[0];
-    end_y = ending_coors[1];
+    float start_x = user_coors[0];
+    float start_y = user_coors[1];
+    float end_x = user_coors[2];
+    float end_y = user_coors[3];
 
     //Build Model.
     RouteModel model{osm_data};
@@ -101,8 +128,6 @@ int main(int argc, const char **argv) {
     // Create RoutePlanner object and perform A* search.
     RoutePlanner route_planner{model, start_x, start_y, end_x, end_y};
     route_planner.AStarSearch();
-
-    //std::cout << "Distance: " << route_planner.GetDistance() << " meters. \n";
 
     // Render results of search.
     Render render{model};
