@@ -65,4 +65,4 @@ C. Tyler Dennis
 
 ## Licensing
 
-This project is released under the [https://opensource.org/licenses/MIT](MIT License)
+This project is released under the [MIT License](https://opensource.org/licenses/MIT)
