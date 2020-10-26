@@ -1,4 +1,4 @@
-# Route Planning Project
+# Route Planner
 
 ## Udacity C++ Nanodegree Project #1 
 
