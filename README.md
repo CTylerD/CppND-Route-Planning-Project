@@ -1,6 +1,6 @@
 # Route Planning Project
 
-## Udacity C++ Nanodegree Project #1
+## Udacity C++ Nanodegree Project #1 
 
 <img src="map.png" width="600" height="450" />
 
