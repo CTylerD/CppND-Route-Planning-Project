@@ -1,19 +1,8 @@
 # Route Planning Project
 
-This repo contains the starter code for the Route Planning project.
+## Udacity C++ Nanodegree Project #1
 
 <img src="map.png" width="600" height="450" />
-
-## Cloning
-
-When cloning this project, be sure to use the `--recurse-submodules` flag. Using HTTPS:
-```
-git clone https://github.com/udacity/CppND-Route-Planning-Project.git --recurse-submodules
-```
-or with SSH:
-```
-git clone git@github.com:udacity/CppND-Route-Planning-Project.git --recurse-submodules
-```
 
 ## Dependencies for Running Locally
 * cmake >= 3.11.3
@@ -29,6 +18,16 @@ git clone git@github.com:udacity/CppND-Route-Planning-Project.git --recurse-subm
 * IO2D
   * Installation instructions for all operating systems can be found [here](https://github.com/cpp-io2d/P0267_RefImpl/blob/master/BUILDING.md)
   * This library must be built in a place where CMake `find_package` will be able to find it
+  
+ When cloning this project, be sure to use the `--recurse-submodules` flag. Using HTTPS:
+```
+git clone https://github.com/udacity/CppND-Route-Planning-Project.git --recurse-submodules
+```
+or with SSH:
+```
+git clone git@github.com:udacity/CppND-Route-Planning-Project.git --recurse-submodules
+```
+
 
 ## Compiling and Running
 
@@ -59,3 +58,11 @@ The testing executable is also placed in the `build` directory. From within `bui
 ./test
 ```
 
+## Contributing Authors
+
+Udacity  
+C. Tyler Dennis
+
+## Licensing
+
+This project is released under the [https://opensource.org/licenses/MIT](MIT License)
