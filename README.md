@@ -60,8 +60,8 @@ The testing executable is also placed in the `build` directory. From within `bui
 
 ## Contributing Authors
 
-Udacity  
-C. Tyler Dennis
+C. Tyler Dennis  
+Udacity
 
 ## Licensing
 
